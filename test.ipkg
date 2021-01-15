@@ -1,0 +1,13 @@
+-- SPDX-FileCopyrightText: 2021 The test-idr developers
+--
+-- SPDX-License-Identifier: CC0-1.0
+
+package toml
+
+depends = contrib
+
+modules =
+    Test,
+    Test.Runner
+
+sourcedir = "src"
