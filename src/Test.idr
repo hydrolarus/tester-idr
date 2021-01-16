@@ -4,7 +4,7 @@
 
 module Test
 
-import Control.Monad.Either
+import public Control.Monad.Either
 import Data.Strings
 import Control.ANSI
 
@@ -33,7 +33,7 @@ red s = show $ colored Red s
 ||| itWorks = test "it works" $ do
 |||     assertEq (1 + 1) 2
 ||| ```
-export
+public export
 test : (description : String) -> (run : TestFunc ()) -> Test
 test = MkTest
 
@@ -83,5 +83,5 @@ assert cond =
 
 ||| Cause a test failure with a message.
 public export
-throw : (msg : String) -> TestFunc ()
+throw : (msg : String) -> TestFunc a
 throw = throwE
