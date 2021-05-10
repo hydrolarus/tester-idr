@@ -2,9 +2,9 @@
 --
 -- SPDX-License-Identifier: MPL-2.0
 
-module Test.Runner
+module Tester.Runner
 
-import Test
+import Tester
 import Data.List
 
 

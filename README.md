@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2021 The test-idr developers
 SPDX-License-Identifier: CC0-1.0
 -->
 
-# `test-idr`
+# `tester-idr`
 
 A testing framework for Idris 2.
 
@@ -13,27 +13,27 @@ A testing framework for Idris 2.
 At least version `0.3.0` of the Idris 2 compiler is required.
 
 ```sh
-idris2 --install test.ipkg
+idris2 --install tester.ipkg
 ```
 
 ## Usage
 
-After installing the package, add `test` to the `depends` section in the `.ipkg` file.
+After installing the package, add `tester` to the `depends` section in the `.ipkg` file.
 
-To construct a `Test`, use the `test` function from the `Test` module.
+To construct a `Test`, use the `test` function from the `Tester` module.
 
-Multiple assertion functions are provided in the `Test` module as well.
+Multiple assertion functions are provided in the `Tester` module as well.
 
 ```idris
 itWorks = test "it works" $ do
     assertEq (1 + 1) 2
 ```
 
-To run a series of tests, the `runTests` function in `Test.Runner` can be used.
+To run a series of tests, the `runTests` function in `Tester.Runner` can be used.
 
 ```idris
-import Test
-import Test.Runner
+import Tester
+import Tester.Runner
 
 tests : List Test
 tests = [

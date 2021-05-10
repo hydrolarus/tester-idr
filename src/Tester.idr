@@ -2,7 +2,7 @@
 --
 -- SPDX-License-Identifier: MPL-2.0
 
-module Test
+module Tester
 
 import public Control.Monad.Either
 import Data.Strings
