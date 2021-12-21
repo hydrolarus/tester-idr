@@ -25,7 +25,7 @@ runTests tests = do
             let diff = longestDesc `minus` len
             in pack $ replicate diff ' '
 
-    res <- for tests \t => do
+    res <- for tests $ \t => do
         putStr $ t.description ++ padding (length t.description) ++ " ... " 
         case !(runEitherT t.run) of
             Left err => do

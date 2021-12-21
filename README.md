@@ -10,7 +10,7 @@ A testing framework for Idris 2.
 
 ## Installation
 
-At least version `0.3.0` of the Idris 2 compiler is required.
+At least version `0.5.0` of the Idris 2 compiler is required.
 
 ```sh
 idris2 --install tester.ipkg

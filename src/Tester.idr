@@ -5,7 +5,7 @@
 module Tester
 
 import public Control.Monad.Either
-import Data.Strings
+import Data.String
 import Control.ANSI
 
 ||| A function which can report test failures.
