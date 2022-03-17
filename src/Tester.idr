@@ -54,7 +54,7 @@ emptyLoc = Loc EmptyFC
 ||| This can be passed to assertion to attach source location
 |||
 ||| ```idris example
-||| let loc = loc `(())
+||| let loc = here `(())
 |||  in assertEq {loc} 
 export %macro
 here : TTImp -> Elab Location
