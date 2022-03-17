@@ -51,6 +51,9 @@ main = do
 Source location can be added to assertions to improve error messages.
 
 ```idris
+import Language.Reflection
+%language ElabReflection
+
 withSource = test "location" $ do
     assert
         {loc = here `(())}
