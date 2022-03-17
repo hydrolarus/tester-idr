@@ -48,6 +48,15 @@ main = do
         else putStrLn "Not all tests passed"
 ```
 
+Source location can be added to assertions to improve error messages.
+
+```idris
+withSource = test "location" $ do
+    assert
+        {loc = here `(())}
+        False
+```
+
 ## License
 
 All code is licensed under the [MPL-2.0](LICENSES/MPL-2.0.txt).

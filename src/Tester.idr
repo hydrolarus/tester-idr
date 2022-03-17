@@ -7,6 +7,10 @@ module Tester
 import public Control.Monad.Either
 import Data.String
 import Control.ANSI
+import Language.Reflection
+import Language.Reflection.TTImp
+
+%language ElabReflection
 
 ||| A function which can report test failures.
 public export
@@ -37,31 +41,70 @@ public export
 test : (description : String) -> (run : TestFunc ()) -> Test
 test = MkTest
 
+public export
+record Location where
+    constructor Loc
+    inner : FC
+
+export
+emptyLoc : Location
+emptyLoc = Loc EmptyFC
+
+||| Get a `Location` token
+||| This can be passed to assertion to attach source location
+|||
+||| ```idris example
+||| let loc = loc `(())
+|||  in assertEq {loc} 
+export %macro
+here : TTImp -> Elab Location
+here ttimp = pure $ Loc $ getFC ttimp
+
+getFile : OriginDesc -> String
+getFile (PhysicalIdrSrc (MkMI path)) = showSep "/" (reverse path) ++ ".idr"
+getFile (PhysicalPkgSrc fname) = fname
+getFile (Virtual _) = "virtual"
+
+formatFC : FC -> String
+formatFC (MkFC origin (startLn, startCol) (endLn, endCol)) = " at \{getFile origin}:\{show startLn}:\{show startCol}--\{show endLn}:\{show endCol}"
+formatFC (MkVirtualFC origin (startLn, startCol) (endLn, endCol)) = " at \{getFile origin}:\{show startLn}:\{show startCol}--\{show endLn}:\{show endCol}"
+formatFC EmptyFC = ""
+
+export
+formatLoc : Location -> String
+formatLoc loc = formatFC loc.inner
+
 ||| Assert that two values are equal.
 |||
 ||| Stops the test and reports a test failure if the values are not equal.
 public export
-assertEq : (Eq a, Show a) => (left, right : a) -> TestFunc ()
+assertEq :
+    (Eq a, Show a) =>
+    {default emptyLoc loc : Location} ->
+    (left, right : a) ->
+    TestFunc ()
 assertEq left right =
-    if left /= right then 
+    unless (left == right) $
         let msg = unlines [
-                    red "assertEq" ++ " failed:",
+                    red "assertEq" ++ " failed\{formatLoc loc}",
                     "  left  `" ++ red (show left) ++ "`",
                     "  right `" ++ red (show right) ++ "`"
                 ]
         in throwE msg
-    else
-        pure ()
 
 ||| Assert that two values are not equal.
 |||
 ||| Stops the test and reports a test failure if the values are equal.
 public export
-assertNotEq : (Eq a, Show a) => (left, right : a) -> TestFunc ()
+assertNotEq :
+    (Eq a, Show a) =>
+    {default emptyLoc loc : Location} ->
+    (left, right : a) ->
+    TestFunc ()
 assertNotEq left right =
     if left == right then 
         let msg = unlines [
-                    red "assertNotEq" ++ " failed:",
+                    red "assertNotEq" ++ " failed\{formatLoc loc}:",
                     "  left  `" ++ red (show left) ++ "`",
                     "  right `" ++ red (show right) ++ "`"
                 ]
@@ -73,10 +116,13 @@ assertNotEq left right =
 |||
 ||| Stops the test and reports a test failure if the condition does not hold.
 public export
-assert : (cond : Bool) -> TestFunc ()
+assert :
+    {default emptyLoc loc : Location} ->
+    (cond : Bool) ->
+    TestFunc ()
 assert cond =
     if not cond then 
-        let msg = red "assert" ++ "failed"
+        let msg = red "assert" ++ "failed\{formatLoc loc}"
         in throwE msg
     else
         pure ()
